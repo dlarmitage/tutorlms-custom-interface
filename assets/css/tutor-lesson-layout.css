@@ -1,0 +1,1198 @@
+/*
+File: tutor-lesson-layout.css
+Theme Component: Tutor LMS Child Theme
+Description: Custom styles for redesigned Tutor LMS lesson layout.
+Author: Ambient Technology
+Version: 2.3.0
+Template: hello-elementor
+URL: https://ambient.technology
+*/
+
+/* ==========================================================================
+   Color Variables & Design System
+   ========================================================================== */
+
+:root {
+    /* Core Brand Colors */
+    --primary-color: #2c3e50;
+    --primary-light: #34495e;
+    --primary-dark: #1a252f;
+    --accent-color: #3498db;
+    --accent-light: #5dade2;
+    --accent-dark: #2980b9;
+    
+    /* Status Colors */
+    --success-color: #27ae60;
+    --success-light: #58d68d;
+    --warning-color: #f39c12;
+    --warning-light: #f8c471;
+    --error-color: #e74c3c;
+    --error-light: #ec7063;
+    --info-color: #17a2b8;
+    
+    /* Neutral Colors */
+    --secondary-color: #6c757d;
+    --light-bg: #f8f9fa;
+    --border-color: #e9ecef;
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-muted: #95a5a6;
+    --white: #ffffff;
+    --black: #000000;
+    
+    /* Layout */
+    --header-height: 60px;
+    
+    /* Shadows & Effects */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 3px 10px rgba(0,0,0,0.15);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.2);
+    --border-radius: 8px;
+    --border-radius-sm: 4px;
+    --border-radius-lg: 12px;
+}
+
+/* ==========================================================================
+   Elementor Global Color Overrides - Scoped to Lesson Layout
+   ========================================================================== */
+
+.tutor-lesson-layout {
+    /* Override Elementor's global colors within our lesson layout */
+    --e-global-color-primary: var(--primary-color);
+    --e-global-color-secondary: var(--secondary-color);
+    --e-global-color-text: var(--text-primary);
+    --e-global-color-accent: var(--accent-color);
+    
+    /* Override any other Elementor colors that might interfere */
+    --e-global-color-1: var(--primary-color);
+    --e-global-color-2: var(--secondary-color);
+    --e-global-color-3: var(--accent-color);
+    --e-global-color-4: var(--success-color);
+    --e-global-color-5: var(--warning-color);
+    --e-global-color-6: var(--error-color);
+    --e-global-color-7: var(--text-primary);
+    --e-global-color-8: var(--text-secondary);
+}
+
+/* Force override any orange/unwanted colors within lesson layout */
+.tutor-lesson-layout a,
+.tutor-lesson-layout .elementor-kit-10 a,
+.tutor-lesson-layout [class*="elementor"] a {
+    color: var(--accent-color) !important;
+}
+
+.tutor-lesson-layout .elementor-kit-10 a:hover,
+.tutor-lesson-layout [class*="elementor"] a:hover {
+    color: var(--accent-dark) !important;
+}
+
+/* ==========================================================================
+   Color Utility Classes - Use Your Design System
+   ========================================================================== */
+
+.tutor-lesson-layout {
+    /* Text Colors */
+    .text-primary { color: var(--text-primary) !important; }
+    .text-secondary { color: var(--text-secondary) !important; }
+    .text-muted { color: var(--text-muted) !important; }
+    .text-accent { color: var(--accent-color) !important; }
+    .text-success { color: var(--success-color) !important; }
+    .text-warning { color: var(--warning-color) !important; }
+    .text-error { color: var(--error-color) !important; }
+    .text-white { color: var(--white) !important; }
+    
+    /* Background Colors */
+    .bg-primary { background-color: var(--primary-color) !important; }
+    .bg-accent { background-color: var(--accent-color) !important; }
+    .bg-success { background-color: var(--success-color) !important; }
+    .bg-warning { background-color: var(--warning-color) !important; }
+    .bg-error { background-color: var(--error-color) !important; }
+    .bg-light { background-color: var(--light-bg) !important; }
+    .bg-white { background-color: var(--white) !important; }
+    
+    /* Border Colors */
+    .border-primary { border-color: var(--primary-color) !important; }
+    .border-accent { border-color: var(--accent-color) !important; }
+    .border-light { border-color: var(--border-color) !important; }
+}
+
+/* ==========================================================================
+   Base Layout & Global Overrides
+   ========================================================================== */
+
+/* Force hide Elementor site header/footer on lesson pages */
+body.single-lesson > header.elementor-location-header,
+body.single-lesson > footer.elementor-location-footer,
+.single-lesson .elementor-32,
+.single-lesson .elementor-25,
+.single-lesson #elementor-header,
+.single-lesson #elementor-footer,
+.single-lesson .elementor-location-header,
+.single-lesson .elementor-location-footer {
+    display: none !important;
+}
+
+/* Prevent body/html scrolling and fix admin bar */
+body.single-lesson,
+html.single-lesson {
+    overflow: hidden !important;
+}
+
+body.admin-bar .tutor-lesson-layout {
+    height: calc(100vh - 32px) !important;
+}
+
+@media screen and (max-width: 782px) {
+    body.admin-bar .tutor-lesson-layout {
+        height: calc(100vh - 46px) !important;
+    }
+}
+
+/* ==========================================================================
+   Main Layout Container - NEW ARCHITECTURE
+   ========================================================================== */
+
+.tutor-lesson-layout {
+    display: flex;
+    flex-direction: column; /* Changed from row to column */
+    height: 100vh;
+    overflow: hidden;
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ==========================================================================
+   Universal Header (Full Width Across Top)
+   ========================================================================== */
+
+.tutor-lesson-header {
+    width: 100%; /* Full width */
+    height: var(--header-height);
+    background: var(--primary-color);
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    z-index: 200;
+    order: 1; /* Always first */
+}
+
+.tutor-lesson-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 100%;
+    padding: 0 1.5rem;
+}
+
+/* Enhanced Sidebar Toggle Button - COMPLETE OVERRIDE */
+.tutor-sidebar-toggle-main {
+    background: transparent !important;
+    border: 2px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 0.5rem !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.tutor-sidebar-toggle-main:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: rgba(255,255,255,0.5) !important;
+    transform: none !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2) !important;
+}
+
+.tutor-sidebar-toggle-main:active {
+    transform: scale(0.95) !important;
+}
+
+/* Hide any existing content and override with our arrows */
+.tutor-sidebar-toggle-main * {
+    display: none !important;
+}
+
+.tutor-sidebar-toggle-main::before {
+    content: '☰' !important;
+    display: block !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    color: white !important;
+}
+
+.tutor-lesson-layout.sidebar-is-hidden .tutor-sidebar-toggle-main::before {
+    content: '›' !important;
+}
+
+/* Alternative approach - override the arrow classes */
+.sidebar-arrow {
+    display: none !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+    color: white !important;
+}
+
+.tutor-lesson-layout:not(.sidebar-is-hidden) .sidebar-open {
+    display: block !important;
+}
+
+.tutor-lesson-layout.sidebar-is-hidden .sidebar-closed {
+    display: block !important;
+}
+
+/* Lesson Title */
+.tutor-lesson-title {
+    flex: 1;
+    text-align: center;
+}
+
+.tutor-lesson-layout .tutor-lesson-header .tutor-lesson-title h1 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    color: white !important;
+    line-height: 1.2 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.tutor-lesson-course-title {
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+    font-weight: 400;
+}
+
+/* Enhanced Close Lesson Button */
+.tutor-close-lesson-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 6px;
+    padding: 0.6rem;
+    text-decoration: none;
+    font-size: 18px;
+    min-width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.tutor-close-lesson-btn:hover {
+    background: rgba(255,87,87,0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    color: white;
+}
+
+/* ==========================================================================
+   Content Body (Sidebar + Main Content)
+   ========================================================================== */
+
+.tutor-lesson-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    order: 2;
+    position: relative;
+}
+
+/* ==========================================================================
+   Sidebar Layout & Behavior - UPDATED FOR NEW ARCHITECTURE
+   ========================================================================== */
+
+.tutor-lesson-sidebar {
+    width: 350px;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    background: var(--light-bg);
+    border-right: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+/* Desktop: Sidebar pushes content with margin */
+@media (min-width: 769px) {
+    .tutor-lesson-layout.sidebar-is-hidden .tutor-lesson-sidebar {
+        margin-left: -350px;
+    }
+}
+
+/* Sidebar Header */
+.tutor-sidebar-header {
+    flex-shrink: 0;
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    min-height: 60px;
+}
+
+.tutor-sidebar-header span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Sidebar Content (Scrollable) */
+.tutor-sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    background: var(--light-bg);
+}
+
+/* Sidebar Footer (Progress) */
+.tutor-sidebar-footer {
+    flex-shrink: 0;
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    border-top: 1px solid var(--border-color);
+}
+
+.tutor-progress-indicator {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tutor-progress-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 0.3rem;
+}
+
+.tutor-progress-text span:first-child {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.tutor-progress-text span:last-child {
+    color: var(--accent-color);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.tutor-progress-bar {
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tutor-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+    transition: width 0.4s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   Course Topics (Sidebar Content) - UNCHANGED
+   ========================================================================== */
+
+.tutor-course-topic {
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tutor-course-topic:last-child {
+    border-bottom: none;
+}
+
+/* Topic Headers - Enhanced Design */
+.tutor-accordion-item-header {
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--light-bg);
+    position: relative;
+}
+
+.tutor-accordion-item-header::after {
+    content: '▸';
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-left: auto;
+    transition: transform 0.2s ease;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tutor-accordion-item-header:hover {
+    background: #e3f2fd;
+    transform: translateX(2px);
+}
+
+.tutor-accordion-item-header.is-active {
+    background: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+    color: white;
+}
+
+.tutor-accordion-item-header.is-active::after {
+    transform: translateY(-50%) rotate(90deg);
+    color: white;
+}
+
+.tutor-accordion-item-header.is-active:hover {
+    background: var(--primary-light);
+}
+
+.tutor-accordion-item-header .tutor-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: nowrap;
+    padding-right: 2rem;
+}
+
+.tutor-accordion-item-header .tutor-col {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-right: 0.5rem;
+}
+
+.tutor-accordion-item-header .tutor-col-auto {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.tutor-course-topic-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.tutor-accordion-item-header.is-active .tutor-course-topic-title {
+    color: white;
+}
+
+.tutor-course-topic-summary {
+    font-size: 12px;
+    color: var(--text-primary);
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 0.2rem 0.5rem;
+    background: var(--border-color);
+    border-radius: 12px;
+    min-width: 35px;
+    text-align: center;
+}
+
+.tutor-accordion-item-header.is-active .tutor-course-topic-summary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-weight: 700;
+}
+
+/* Topic Bodies */
+.tutor-accordion-item-body {
+    background: var(--light-bg);
+    padding: 0;
+}
+
+/* Course Topic Items (Lessons) - FIXED CONTRAST */
+.tutor-course-topic-item {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tutor-course-topic-item:last-child {
+    border-bottom: none;
+}
+
+.tutor-course-topic-item a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.tutor-course-topic-item a:hover {
+    background: #e8f4f8;
+    color: var(--text-primary);
+    transform: translateX(3px);
+}
+
+.tutor-course-topic-item.is-active a {
+    background: var(--accent-color) !important;
+    color: white !important;
+    box-shadow: inset 3px 0 0 var(--primary-color) !important;
+}
+
+.tutor-course-topic-item.is-active a:hover {
+    background: var(--primary-light) !important;
+    color: white !important;
+    transform: translateX(0) !important;
+}
+
+.tutor-course-topic-item-icon {
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+    font-size: 16px;
+}
+
+.tutor-course-topic-item.is-active .tutor-course-topic-item-icon {
+    color: white !important;
+}
+
+.tutor-course-topic-item-title {
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+}
+
+/* FORCE WHITE TEXT ON ACTIVE LESSON */
+.tutor-course-topic-item.is-active .tutor-course-topic-item-title {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+/* Override any blue color from TutorLMS */
+.tutor-course-topic-item.is-active a *,
+.tutor-course-topic-item.is-active a .tutor-course-topic-item-title {
+    color: white !important;
+}
+
+.tutor-course-topic-item-duration {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+}
+
+.tutor-course-topic-item.is-active .tutor-course-topic-item-duration {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ==========================================================================
+   Main Content Area - UPDATED FOR NEW ARCHITECTURE
+   ========================================================================== */
+
+.tutor-lesson-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* ==========================================================================
+   Content Area (Scrollable)
+   ========================================================================== */
+
+.tutor-lesson-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Center the main content wrapper */
+.tutor-course-topic-single-body {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Video Player - RESPONSIVE AND CENTERED */
+.tutor-video-player-wrapper {
+    position: relative;
+    margin: 0 auto 2rem auto;
+    max-width: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+.tutor-video-player-wrapper video,
+.tutor-video-player-wrapper iframe {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Featured Image */
+.tutor-lesson-feature-image {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.tutor-lesson-feature-image img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+/* Enhanced Content Tabs - REDUCED SPACING */
+.tutor-course-spotlight-wrapper {
+    padding: 1rem; /* Reduced from 2rem */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tutor-course-spotlight-nav {
+    margin-bottom: 1rem; /* Reduced from 2rem */
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Make sure text content matches video/image width */
+.tutor-tab-item .tutor-container {
+    max-width: none !important;
+    width: 100%;
+    padding: 0;
+}
+
+.tutor-tab-item .tutor-row {
+    margin: 0;
+    width: 100%;
+}
+
+.tutor-tab-item .tutor-col-xl-8 {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    width: 100%;
+    padding: 0;
+}
+
+.tutor-nav-item {
+    margin-bottom: -2px;
+}
+
+.tutor-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.tutor-nav-link:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.tutor-nav-link.is-active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+    background: rgba(52, 152, 219, 0.1);
+    font-weight: 600;
+}
+
+.tutor-tab-item {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tutor-tab-item.is-active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Footer (Sticky) - Enhanced Design
+   ========================================================================== */
+
+.tutor-lesson-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    background: #ffffff;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+    box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
+    padding: 1rem 2rem;
+}
+
+.tutor-lesson-footer-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.tutor-footer-left,
+.tutor-footer-right {
+    flex: 0 0 auto;
+}
+
+.tutor-footer-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Enhanced Mark Complete - SIMPLIFIED DESIGN */
+.tutor-mark-complete-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: none; /* Removed border */
+    background: transparent; /* Transparent background */
+}
+
+.tutor-mark-complete-wrapper:hover {
+    background: rgba(39, 174, 96, 0.1); /* Subtle green tint on hover */
+    transform: none; /* Removed lift effect */
+    box-shadow: none; /* Removed shadow */
+}
+
+.tutor-mark-complete-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid var(--success-color);
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    background: white;
+}
+
+.tutor-mark-complete-checkbox:checked {
+    background: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.tutor-mark-complete-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tutor-mark-complete-label {
+    font-size: 14px;
+    font-weight: 500; /* Reduced from 600 */
+    color: var(--text-primary);
+    user-select: none;
+}
+
+/* Hide Mark Complete checkbox and wrapper */
+.tutor-mark-complete-checkbox,
+.tutor-mark-complete-wrapper,
+input[type="checkbox"][name="mark_complete"],
+.mark-complete-checkbox {
+    display: none !important;
+}
+
+/* Also hide any parent containers that might show */
+.tutor-lesson-complete-form {
+    display: none !important;
+}
+
+/* Enhanced Navigation Buttons - FIXED VISIBILITY */
+.tutor-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    padding: 0.8rem 1.6rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    border: 2px solid transparent !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    font-size: 14px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.tutor-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.tutor-btn:hover::before {
+    left: 100%;
+}
+
+/* Previous button - DARK WITH WHITE TEXT */
+.tutor-btn-secondary {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+    font-weight: 600 !important;
+}
+
+.tutor-btn-secondary:hover {
+    background: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3) !important;
+}
+
+/* Next button - BLUE WITH WHITE TEXT */
+.tutor-btn-primary {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border-color: var(--accent-color) !important;
+    font-weight: 700 !important;
+}
+
+.tutor-btn-primary:hover {
+    background: var(--accent-dark) !important;
+    border-color: var(--accent-dark) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4) !important;
+}
+
+/* Force override any conflicting styles */
+.tutor-lesson-footer .tutor-btn-primary,
+.tutor-lesson-footer .tutor-btn-primary:visited,
+.tutor-lesson-footer .tutor-btn-primary:focus,
+.tutor-lesson-footer .tutor-btn-primary:active {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border-color: var(--accent-color) !important;
+}
+
+.tutor-lesson-footer .tutor-btn-secondary,
+.tutor-lesson-footer .tutor-btn-secondary:visited,
+.tutor-lesson-footer .tutor-btn-secondary:focus,
+.tutor-lesson-footer .tutor-btn-secondary:active {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Icon styling in buttons */
+.tutor-btn [class*="tutor-icon"] {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   Responsive Design - UPDATED FOR NEW ARCHITECTURE
+   ========================================================================== */
+
+/* Large Tablets (1024px - 1199px) */
+@media (max-width: 1199px) {
+    .tutor-lesson-sidebar {
+        width: 300px;
+        min-width: 300px;
+    }
+    
+    .tutor-lesson-layout.sidebar-is-hidden .tutor-lesson-sidebar {
+        margin-left: -300px;
+    }
+    
+    .tutor-sidebar-header,
+    .tutor-sidebar-footer {
+        padding: 0.75rem 1rem;
+    }
+    
+    .tutor-sidebar-content .tutor-course-topic-item a {
+        padding: 0.625rem 1rem;
+    }
+}
+
+/* Tablets (768px - 1023px) */
+@media (max-width: 1023px) {
+    .tutor-lesson-sidebar {
+        width: 280px;
+        min-width: 280px;
+    }
+    
+    .tutor-lesson-layout.sidebar-is-hidden .tutor-lesson-sidebar {
+        margin-left: -280px;
+    }
+    
+    .tutor-course-spotlight-wrapper {
+        padding: 1.5rem;
+    }
+    
+    .tutor-nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 14px;
+    }
+}
+
+/* Mobile and Tablet Overlay Behavior (768px and below) */
+@media (max-width: 768px) {
+    /* Hide any stray orange elements or course thumbnails that might appear */
+    .tutor-lesson-layout .tutor-course-thumbnail,
+    .tutor-lesson-layout .course-thumbnail,
+    .tutor-lesson-layout .lesson-thumbnail,
+    .tutor-lesson-layout .tutor-course-feature-image {
+        display: none !important;
+    }
+    
+    .tutor-lesson-sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 280px;
+        min-width: 280px;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .tutor-lesson-layout:not(.sidebar-is-hidden) .tutor-lesson-sidebar {
+        transform: translateX(0);
+    }
+    
+    /* Remove margin behavior on mobile */
+    .tutor-lesson-layout.sidebar-is-hidden .tutor-lesson-sidebar {
+        margin-left: 0;
+    }
+    
+    /* Keep the header toggle button for all screen sizes */
+    .tutor-sidebar-toggle-main {
+        min-width: 42px !important;
+        height: 42px !important;
+        font-size: 18px !important;
+    }
+    
+    /* Ensure header layout works properly */
+    .tutor-lesson-header-controls {
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+    
+    .tutor-lesson-title {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .tutor-lesson-main {
+        width: 100%;
+    }
+    
+    .tutor-course-spotlight-wrapper {
+        padding: 0.75rem; /* Reduced for mobile */
+    }
+    
+    .tutor-nav-link {
+        padding: 0.625rem 0.75rem;
+        font-size: 13px;
+    }
+    
+    .tutor-nav-link span:first-child {
+        margin-right: 0.5rem;
+    }
+    
+    /* Keep horizontal layout at 768px - only reduce button sizes slightly */
+    .tutor-btn {
+        padding: 0.8rem 1.1rem; /* Slightly smaller but still horizontal layout */
+        font-size: 13px;
+    }
+    
+    /* Mobile overlay for when sidebar is open */
+    .tutor-lesson-layout:not(.sidebar-is-hidden) .tutor-lesson-body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 140;
+        pointer-events: auto;
+    }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 479px) {
+    .tutor-lesson-sidebar {
+        width: 260px;
+        min-width: 260px;
+    }
+    
+    .tutor-sidebar-header span {
+        font-size: 14px;
+    }
+    
+    .tutor-course-topic-item-title {
+        font-size: 12px;
+    }
+    
+    .tutor-course-spotlight-wrapper {
+        padding: 0.75rem;
+    }
+    
+    .tutor-nav-link {
+        padding: 0.5rem;
+        font-size: 12px;
+    }
+    
+    /* Smaller header on tiny screens */
+    :root {
+        --header-height: 50px;
+    }
+    
+    .tutor-lesson-header-controls {
+        padding: 0 0.75rem;
+    }
+    
+    .tutor-lesson-layout .tutor-lesson-header .tutor-lesson-title h1 {
+        font-size: 12px !important;
+    }
+    
+    /* HIDE course title on mobile to save space */
+    .tutor-lesson-course-title {
+        display: none !important;
+    }
+    
+    /* Make sure header toggle button is properly sized */
+    .tutor-sidebar-toggle-main {
+        min-width: 40px !important;
+        height: 40px !important;
+        font-size: 16px !important;
+    }
+    
+    /* HORIZONTAL mobile layout - make everything smaller */
+    .tutor-btn {
+        padding: 0.5rem 0.75rem; /* Much smaller padding */
+        font-size: 11px; /* Smaller text */
+        min-width: auto; /* Remove any min-width constraints */
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+    
+    /* Compact Mark Complete for mobile */
+    .tutor-mark-complete-wrapper {
+        padding: 0.3rem 0.5rem; /* Compact padding */
+        gap: 0.4rem; /* Smaller gap */
+    }
+    
+    .tutor-mark-complete-label {
+        font-size: 11px; /* Smaller text */
+    }
+    
+    .tutor-mark-complete-checkbox {
+        width: 16px; /* Smaller checkbox */
+        height: 16px;
+    }
+    
+    /* Tighter footer spacing */
+    .tutor-lesson-footer {
+        padding: 0.75rem 1rem; /* Reduced padding */
+    }
+    
+    .tutor-lesson-footer-controls {
+        gap: 0.5rem; /* Smaller gap between elements */
+    }
+    
+    /* Make footer sections more compact */
+    .tutor-footer-left,
+    .tutor-footer-right {
+        flex: 0 0 auto; /* Don't grow */
+        min-width: 0; /* Allow shrinking */
+    }
+    
+    .tutor-footer-center {
+        flex: 0 0 auto; /* Don't let it take too much space */
+        min-width: 0;
+    }
+}
+
+/* ==========================================================================
+   Design System Customization Guide
+   ========================================================================== */
+
+/*
+TO CUSTOMIZE YOUR LESSON COLORS:
+
+1. CHANGE THE MAIN BRAND COLORS:
+   --primary-color: #your-main-color;
+   --accent-color: #your-accent-color;
+
+2. CUSTOMIZE STATUS COLORS:
+   --success-color: #your-success-color;
+   --warning-color: #your-warning-color;
+   --error-color: #your-error-color;
+
+3. ADJUST NEUTRAL COLORS:
+   --text-primary: #your-main-text-color;
+   --text-secondary: #your-secondary-text-color;
+   --light-bg: #your-background-color;
+   --border-color: #your-border-color;
+
+EXAMPLE COLOR SCHEMES:
+
+// Modern Dark Blue
+--primary-color: #1e293b;
+--accent-color: #0ea5e9;
+--success-color: #10b981;
+
+// Green Education
+--primary-color: #064e3b;
+--accent-color: #059669;
+--success-color: #34d399;
+
+// Purple Creative
+--primary-color: #581c87;
+--accent-color: #8b5cf6;
+--success-color: #10b981;
+
+// Orange Energetic
+--primary-color: #9a3412;
+--accent-color: #ea580c;
+--success-color: #22c55e;
+*/

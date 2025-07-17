@@ -1,0 +1,37 @@
+/*
+File: styles.css
+Theme Component: Tutor LMS Child Theme
+Description: Custom styles for redesigned Tutor LMS lesson layout.
+Author: Ambient Technology
+Version: 2.3.0
+Template: hello-elementor
+URL: https://ambient.technology
+*/
+
+/* ============================================
+   BASE LAYOUT & STRUCTURE
+   ============================================ */
+/* Ensure body has no conflicting styles on lesson pages */
+body.single-lesson {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Hide any theme-specific containers that might interfere */
+.single-lesson .site-header,
+.single-lesson .site-footer,
+.single-lesson .content-area,
+.single-lesson .widget-area {
+    display: none;
+}
+
+/* Ensure our layout container takes full control */
+.single-lesson .tutor-lesson-layout {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
