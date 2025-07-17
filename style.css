@@ -1,11 +1,18 @@
 /*
-File: styles.css
-Theme Component: Tutor LMS Child Theme
-Description: Custom styles for redesigned Tutor LMS lesson layout.
-Author: Ambient Technology
-Version: 2.3.0
+Theme Name: TutorLMS Custom Interface
+Description: Modern, app-like lesson interface for TutorLMS with responsive design, clean navigation, and seamless functionality.
+Author: David Armitage
+Author URI: https://github.com/dlarmitage
+Version: 1.0.0
 Template: hello-elementor
-URL: https://ambient.technology
+Requires at least: 5.0
+Tested up to: 6.4
+Requires PHP: 7.4
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: tutorlms-custom-interface
+Tags: education, learning, responsive-design, custom-layout, tutorlms
+GitHub Theme URI: dlarmitage/tutorlms-custom-interface
 */
 
 /* ============================================
