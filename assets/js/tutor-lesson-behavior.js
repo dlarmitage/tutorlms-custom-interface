@@ -58,6 +58,7 @@ class TutorLessonLayout {
         this.bindEvents();
         this.handleResize();
         this.initializeTabSwitching();
+        this.initializeDynamicTooltips();
         this.initializeSidebarCompletion();
         this.isInitialized = true;
 
@@ -198,6 +199,64 @@ class TutorLessonLayout {
                 console.log('🖥️ Desktop view - restoring sidebar visibility');
             }
         }
+    }
+
+    /**
+     * Initialize dynamic tooltips for completion checkboxes
+     */
+    initializeDynamicTooltips() {
+        console.log('💡 Initializing dynamic tooltips...');
+        
+        // Function to update tooltip text based on completion state
+        const updateTooltip = (input) => {
+            const isCompleted = input.checked;
+            const tooltipType = input.getAttribute('data-tooltip-type') || 'lesson';
+            
+            let tooltipText = '';
+            if (tooltipType === 'quiz') {
+                tooltipText = isCompleted ? 'Quiz completed ✓' : 'Click to mark quiz as complete';
+            } else {
+                tooltipText = isCompleted ? 'Lesson completed ✓' : 'Click to mark as complete';
+            }
+            
+            input.setAttribute('title', tooltipText);
+            input.setAttribute('data-completed', isCompleted.toString());
+            
+            // Update cursor style
+            if (isCompleted) {
+                input.style.cursor = 'default';
+            } else {
+                input.style.cursor = 'pointer';
+            }
+        };
+        
+        // Update tooltips for all completion inputs
+        const updateAllTooltips = () => {
+            const inputs = document.querySelectorAll('.tutor-form-check-input.tutor-form-check-circle');
+            inputs.forEach(input => {
+                updateTooltip(input);
+            });
+        };
+        
+        // Initial update
+        updateAllTooltips();
+        
+        // Set up observer to watch for changes
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'checked') {
+                    updateTooltip(mutation.target);
+                }
+            });
+        });
+        
+        // Observe all completion inputs
+        const inputs = document.querySelectorAll('.tutor-form-check-input.tutor-form-check-circle');
+        inputs.forEach(input => {
+            observer.observe(input, { attributes: true, attributeFilter: ['checked'] });
+        });
+        
+        console.log('✅ Dynamic tooltips initialized');
     }
 
     /**

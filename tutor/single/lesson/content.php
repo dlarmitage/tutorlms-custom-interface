@@ -61,9 +61,7 @@ function include_tutor_template($template_name, $fallback_message = '') {
     <header class="tutor-lesson-header">
         <div class="tutor-lesson-header-controls">
             <!-- Sidebar Toggle -->
-            <button class="tutor-sidebar-toggle-main" aria-label="<?php esc_attr_e('Toggle sidebar', 'tutor'); ?>">
-                <span class="sidebar-arrow sidebar-open">‹</span>
-                <span class="sidebar-arrow sidebar-closed">›</span>
+            <button class="tutor-sidebar-toggle-main" aria-label="<?php esc_attr_e('Show/hide course navigation', 'tutor'); ?>" title="<?php esc_attr_e('Show/hide course navigation', 'tutor'); ?>">
             </button>
             
             <!-- Lesson Title -->
@@ -75,8 +73,7 @@ function include_tutor_template($template_name, $fallback_message = '') {
             </div>
             
             <!-- Close Lesson Button -->
-            <a href="<?php echo esc_url(get_permalink($course_id)); ?>" class="tutor-close-lesson-btn" aria-label="<?php esc_attr_e('Return to course', 'tutor'); ?>">
-                <span class="tutor-icon-times" aria-hidden="true"></span>
+            <a href="<?php echo esc_url(get_permalink($course_id)); ?>" class="tutor-close-lesson-btn" aria-label="<?php esc_attr_e('Exit lesson and return to course overview', 'tutor'); ?>" title="<?php esc_attr_e('Exit lesson and return to course overview', 'tutor'); ?>">
             </a>
         </div>
     </header>
@@ -296,7 +293,10 @@ function include_tutor_template($template_name, $fallback_message = '') {
                             <input type="checkbox" 
                                    class="tutor-mark-complete-checkbox" 
                                    data-lesson-id="<?php echo esc_attr($content_id); ?>"
-                                   <?php echo $is_completed ? 'checked' : ''; ?>>
+                                   <?php echo $is_completed ? 'checked' : ''; ?>
+                                   title="<?php echo esc_attr($is_completed ? __('Lesson completed ✓', 'tutor') : __('Click to mark this lesson as complete', 'tutor')); ?>"
+                                   data-tooltip-type="lesson"
+                                   data-completed="<?php echo esc_attr($is_completed ? 'true' : 'false'); ?>">
                             <span class="tutor-mark-complete-label">
                                 <?php esc_html_e('Mark Complete', 'tutor'); ?>
                             </span>

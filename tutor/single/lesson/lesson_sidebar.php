@@ -148,9 +148,16 @@ if ($topics->have_posts()) {
                                     ?>
 
                                     <?php if (!$lock_icon) : ?>
-                                        <input type="checkbox" class="tutor-form-check-input tutor-form-check-circle <?php echo esc_attr($result_class); ?>" disabled="disabled" readonly="readonly" <?php echo esc_attr($attempt_ended ? 'checked="checked"' : ''); ?> />
+                                        <input type="checkbox" 
+                                               class="tutor-form-check-input tutor-form-check-circle <?php echo esc_attr($result_class); ?>" 
+                                               disabled="disabled" 
+                                               readonly="readonly" 
+                                               <?php echo esc_attr($attempt_ended ? 'checked="checked"' : ''); ?>
+                                               title="<?php echo esc_attr($attempt_ended ? __('Quiz completed ✓', 'tutor') : __('Click to mark quiz as complete', 'tutor')); ?>"
+                                               data-tooltip-type="quiz"
+                                               data-completed="<?php echo esc_attr($attempt_ended ? 'true' : 'false'); ?>" />
                                     <?php else : ?>
-                                        <i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4"></i>
+                                        <i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" title="<?php esc_attr_e('Complete previous lessons to unlock', 'tutor'); ?>"></i>
                                     <?php endif; ?>
                                 </div>
                             </a>
@@ -239,9 +246,11 @@ if ($topics->have_posts()) {
                                     $lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
 
                                     if (!$lock_icon) {
-                                        echo '<input ' . $lesson_complete_icon . ' type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled readonly />';
+                                        $is_completed = $is_completed_lesson ? 'true' : 'false';
+                                        $tooltip_text = $is_completed_lesson ? __('Lesson completed ✓', 'tutor') : __('Click to mark as complete', 'tutor');
+                                        echo '<input ' . $lesson_complete_icon . ' type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled readonly title="' . esc_attr($tooltip_text) . '" data-tooltip-type="lesson" data-completed="' . esc_attr($is_completed) . '" />';
                                     } else {
-                                        echo '<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4"></i>';
+                                        echo '<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" title="' . esc_attr__('Complete previous lessons to unlock', 'tutor') . '"></i>';
                                     }
                                     ?>
                                 </div>
