@@ -3,7 +3,7 @@ File: tutor-lesson-layout.css
 Theme Component: Tutor LMS Child Theme
 Description: Custom styles for redesigned Tutor LMS lesson layout.
 Author: Ambient Technology
-Version: 2.3.0
+Version: 2.4.3
 Template: hello-elementor
 URL: https://ambient.technology
 */
@@ -87,127 +87,122 @@ URL: https://ambient.technology
 }
 
 /* ==========================================================================
-   Enhanced Tooltip System
+   Disable Default Tutor LMS Tooltips
    ========================================================================== */
 
-/* Base tooltip styles */
-.tutor-lesson-layout [title] {
+/* Hide the info icons to avoid tooltip issues */
+.tutor-lesson-layout .tutor-course-topic-title-info {
+    display: none !important;
+}
+
+/* Completely disable the old tooltip system */
+.tutor-lesson-layout .tooltip-wrap,
+.tutor-lesson-layout .tooltip-txt,
+.tutor-lesson-layout .tutor-course-topic-title-info-icon {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Disable all Tutor LMS default tooltips */
+.tutor-lesson-layout [data-tippy-root],
+.tutor-lesson-layout .tippy-box,
+.tutor-lesson-layout .tippy-content,
+.tutor-lesson-layout .tutor-tooltip,
+.tutor-lesson-layout .tutor-tooltip-box,
+.tutor-lesson-layout .tutor-tooltip-content,
+.tutor-lesson-layout .tutor-tooltip-arrow,
+.tutor-lesson-layout .tutor-tooltip-wrapper {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+}
+
+/* Disable tooltips on topic headers specifically - but allow custom tooltips */
+.tutor-lesson-layout .tutor-accordion-item-header[title]:not([data-custom-tooltip]) {
+    /* Remove the title attribute's default browser tooltip behavior */
     position: relative;
-    /* Don't override cursor for buttons - they should use pointer */
 }
 
-/* Custom tooltip container */
-.tutor-lesson-layout .tooltip-wrap {
+.tutor-lesson-layout .tutor-accordion-item-header[title]:not([data-custom-tooltip])::after {
+    /* Prevent any CSS-based tooltips */
+    display: none !important;
+    content: none !important;
+}
+
+/* Ensure no tooltips appear on hover for topic headers without custom tooltips */
+.tutor-lesson-layout .tutor-accordion-item-header:not([data-custom-tooltip]):hover::after,
+.tutor-lesson-layout .tutor-accordion-item-header:not([data-custom-tooltip]):hover::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* Additional tooltip disabling for various libraries and edge cases */
+.tutor-lesson-layout [title]:not([data-custom-tooltip]) {
+    /* Disable browser tooltips for elements that don't have our custom tooltip */
     position: relative;
-    display: inline-block;
 }
 
-/* Enhanced tooltip text */
-.tutor-lesson-layout .tooltip-txt {
-    position: absolute;
-    background: var(--primary-color);
-    color: white;
-    padding: 8px 12px;
-    border-radius: var(--border-radius-sm);
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease-in-out;
-    box-shadow: var(--shadow-md);
-    pointer-events: none;
-    max-width: 200px;
-    word-wrap: break-word;
-    white-space: normal;
-    line-height: 1.4;
+.tutor-lesson-layout [title]:not([data-custom-tooltip])::after {
+    /* Prevent any CSS-based tooltips */
+    display: none !important;
+    content: none !important;
 }
 
-/* Show tooltip on hover */
-.tutor-lesson-layout .tooltip-wrap:hover .tooltip-txt,
-.tutor-lesson-layout [title]:hover::after {
-    opacity: 1;
-    visibility: visible;
+/* Disable any floating tooltip elements */
+.tutor-lesson-layout .floating-tooltip,
+.tutor-lesson-layout .popover,
+.tutor-lesson-layout .popover-content,
+.tutor-lesson-layout .tooltipster-base,
+.tutor-lesson-layout .tooltipster-box,
+.tutor-lesson-layout .tooltipster-content,
+.tutor-lesson-layout .qtip,
+.tutor-lesson-layout .qtip-content,
+.tutor-lesson-layout .bootstrap-tooltip,
+.tutor-lesson-layout .tooltip-inner {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
 }
 
-/* Position tooltips */
-.tutor-lesson-layout .tooltip-txt.tooltip-bottom {
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 8px;
+/* Disable any tooltip triggers */
+.tutor-lesson-layout [data-toggle="tooltip"],
+.tutor-lesson-layout [data-tooltip],
+.tutor-lesson-layout [data-tippy],
+.tutor-lesson-layout [data-tooltipster] {
+    /* Remove tooltip triggers */
+    position: relative;
 }
 
-.tutor-lesson-layout .tooltip-txt.tooltip-top {
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 8px;
+/* Ensure tooltip-disabled headers don't show any tooltips */
+.tutor-lesson-layout .tutor-accordion-item-header.tooltip-disabled[title] {
+    position: relative;
 }
 
-.tutor-lesson-layout .tooltip-txt.tooltip-left {
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 8px;
+.tutor-lesson-layout .tutor-accordion-item-header.tooltip-disabled[title]::after,
+.tutor-lesson-layout .tutor-accordion-item-header.tooltip-disabled[title]::before {
+    display: none !important;
+    content: none !important;
 }
 
-.tutor-lesson-layout .tooltip-txt.tooltip-right {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 8px;
-}
-
-/* Tooltip arrow */
-.tutor-lesson-layout .tooltip-txt::before {
-    content: '';
-    position: absolute;
-    border: 5px solid transparent;
-}
-
-.tutor-lesson-layout .tooltip-txt.tooltip-bottom::before {
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-bottom-color: var(--primary-color);
-}
-
-.tutor-lesson-layout .tooltip-txt.tooltip-top::before {
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-top-color: var(--primary-color);
-}
-
-.tutor-lesson-layout .tooltip-txt.tooltip-left::before {
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-left-color: var(--primary-color);
-}
-
-.tutor-lesson-layout .tooltip-txt.tooltip-right::before {
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-right-color: var(--primary-color);
-}
-
-/* Special styling for completion checkboxes */
-.tutor-lesson-layout .tutor-form-check-input[title] {
-    cursor: pointer; /* Use pointer for interactive checkboxes */
-}
-
-.tutor-lesson-layout .tutor-form-check-input[data-completed="true"] {
-    cursor: default;
-}
+/* ==========================================================================
+   Working Tooltips for Buttons and Checkboxes
+   ========================================================================== */
 
 /* Tooltip styling for buttons and interactive elements */
 .tutor-lesson-layout .tutor-sidebar-toggle-main[title]:hover::after,
 .tutor-lesson-layout .tutor-close-lesson-btn[title]:hover::after,
-.tutor-lesson-layout .tutor-mark-complete-checkbox[title]:hover::after {
+.tutor-lesson-layout .tutor-mark-complete-checkbox[title]:hover::after,
+.tutor-lesson-layout .tutor-accordion-item-header[data-custom-tooltip]:hover::after {
     content: attr(title);
     position: absolute;
     background: var(--primary-color);
@@ -217,7 +212,7 @@ URL: https://ambient.technology
     font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
-    z-index: 1000;
+    z-index: 9999;
     box-shadow: var(--shadow-md);
     pointer-events: none;
     max-width: 200px;
@@ -233,7 +228,8 @@ URL: https://ambient.technology
 /* Tooltip arrow for buttons */
 .tutor-lesson-layout .tutor-sidebar-toggle-main[title]:hover::before,
 .tutor-lesson-layout .tutor-close-lesson-btn[title]:hover::before,
-.tutor-lesson-layout .tutor-mark-complete-checkbox[title]:hover::before {
+.tutor-lesson-layout .tutor-mark-complete-checkbox[title]:hover::before,
+.tutor-lesson-layout .tutor-accordion-item-header[data-custom-tooltip]:hover::before {
     content: '';
     position: absolute;
     border: 5px solid transparent;
@@ -241,7 +237,7 @@ URL: https://ambient.technology
     left: 50%;
     transform: translateX(-50%);
     border-bottom-color: var(--primary-color);
-    z-index: 1000;
+    z-index: 9999;
     pointer-events: none;
 }
 
@@ -283,22 +279,21 @@ URL: https://ambient.technology
         font-size: 11px !important;
     }
     
-    /* Ensure tooltips don't go off-screen */
-    .tutor-lesson-layout [title]:hover::after {
-        max-width: 150px !important;
+    .tutor-lesson-layout .tutor-accordion-item-header[data-custom-tooltip]:hover::after {
+        max-width: 200px !important;
         word-wrap: break-word !important;
         white-space: normal !important;
         font-size: 11px !important;
     }
 }
 
-/* Mobile tooltip adjustments */
-@media (max-width: 768px) {
-    .tutor-lesson-layout .tooltip-txt {
-        font-size: 11px;
-        padding: 6px 10px;
-        max-width: 150px;
-    }
+/* Special styling for completion checkboxes */
+.tutor-lesson-layout .tutor-form-check-input[title] {
+    cursor: pointer; /* Use pointer for interactive checkboxes */
+}
+
+.tutor-lesson-layout .tutor-form-check-input[data-completed="true"] {
+    cursor: default;
 }
 
 /* ==========================================================================
@@ -440,7 +435,7 @@ body.admin-bar .tutor-lesson-layout {
 .tutor-sidebar-toggle-main::before {
     content: '◀' !important;
     display: block !important;
-    font-size: 16px !important;
+    font-size: 20px !important;
     line-height: 1 !important;
     color: white !important;
     font-weight: bold !important;
@@ -591,7 +586,7 @@ body.admin-bar .tutor-lesson-layout {
     border-right: 1px solid var(--border-color);
     transition: all 0.3s ease;
     position: relative;
-    z-index: 100;
+    z-index: 1; /* Low z-index to keep stacking context minimal */
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
@@ -694,38 +689,61 @@ body.admin-bar .tutor-lesson-layout {
     transition: all 0.2s ease;
     border-bottom: 1px solid var(--light-bg);
     position: relative;
+    /* Remove z-index to prevent stacking context issues */
 }
 
-.tutor-accordion-item-header::after {
-    content: '▸';
-    font-size: 14px;
+/* Accordion Caret Icon - Using TutorLMS icon library instead of Unicode */
+.tutor-accordion-caret {
+    font-size: 16px;
     color: var(--text-secondary);
-    margin-left: auto;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease, color 0.3s ease;
     position: absolute;
-    right: 1rem;
+    right: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    z-index: 1;
 }
+
+
 
 .tutor-accordion-item-header:hover {
     background: #e3f2fd;
     transform: translateX(2px);
 }
 
+.tutor-accordion-item-header:hover .tutor-accordion-caret {
+    color: var(--accent-color);
+}
+
+/* Ensure white caret on active/expanded topics for better contrast */
+.tutor-accordion-item-header.is-active .tutor-accordion-caret {
+    color: white !important;
+}
+
 .tutor-accordion-item-header.is-active {
     background: var(--accent-color);
     border-bottom-color: var(--accent-color);
     color: white;
+    z-index: 0; /* Lower z-index so tooltips can appear above */
 }
 
-.tutor-accordion-item-header.is-active::after {
+.tutor-accordion-caret.is-active {
     transform: translateY(-50%) rotate(90deg);
-    color: white;
+    color: white !important;
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .tutor-accordion-item-header.is-active:hover {
     background: var(--primary-light);
+}
+
+.tutor-accordion-item-header.is-active:hover .tutor-accordion-caret {
+    color: white !important;
 }
 
 .tutor-accordion-item-header .tutor-row {
@@ -772,6 +790,8 @@ body.admin-bar .tutor-lesson-layout {
     border-radius: 12px;
     min-width: 35px;
     text-align: center;
+    margin-left: 1rem;
+    margin-right: 1.5rem; /* Move closer to the caret */
 }
 
 .tutor-accordion-item-header.is-active .tutor-course-topic-summary {
@@ -784,6 +804,16 @@ body.admin-bar .tutor-lesson-layout {
 .tutor-accordion-item-body {
     background: var(--light-bg);
     padding: 0;
+}
+
+/* Accordion display control */
+.tutor-accordion-item-body.tutor-display-none {
+    display: none !important;
+}
+
+/* Fallback for any element with this class */
+.tutor-display-none {
+    display: none !important;
 }
 
 /* Course Topic Items (Lessons) - FIXED CONTRAST */
@@ -1256,7 +1286,7 @@ input[type="checkbox"][name="mark_complete"],
         height: 100%;
         width: 280px;
         min-width: 280px;
-        z-index: 150;
+        z-index: 1; /* Low z-index to keep stacking context minimal */
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
@@ -1353,6 +1383,19 @@ input[type="checkbox"][name="mark_complete"],
         font-size: 12px;
     }
     
+    /* Ensure caret is properly sized on mobile */
+    .tutor-accordion-caret {
+        font-size: 14px !important;
+        width: 18px !important;
+        height: 18px !important;
+        right: 0.5rem !important;
+    }
+    
+    /* Adjust topic summary margin for mobile */
+    .tutor-course-topic-summary {
+        margin-right: 1.25rem !important;
+    }
+    
     .tutor-course-spotlight-wrapper {
         padding: 0.75rem;
     }
@@ -1395,6 +1438,19 @@ input[type="checkbox"][name="mark_complete"],
     
     .tutor-close-lesson-btn::before {
         font-size: 14px !important;
+    }
+    
+    /* Even smaller caret for very small screens */
+    .tutor-accordion-caret {
+        font-size: 12px !important;
+        width: 16px !important;
+        height: 16px !important;
+        right: 0.25rem !important;
+    }
+    
+    /* Adjust topic summary margin for very small screens */
+    .tutor-course-topic-summary {
+        margin-right: 1rem !important;
     }
     
     /* HORIZONTAL mobile layout - make everything smaller */

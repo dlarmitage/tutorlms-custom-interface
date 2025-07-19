@@ -3,7 +3,7 @@
  * Theme Component: Tutor LMS Child Theme
  * Description: Custom JavaScript for interactive behavior on Tutor LMS lesson pages.
  * Author: Ambient Technology
- * Version: 2.3.1
+ * Version: 2.4.1
  * Template: hello-elementor
  * URL: https://ambient.technology
  */
@@ -25,8 +25,6 @@ class TutorLessonLayout {
     }
 
     init() {
-        console.log('🚀 TutorLessonLayout initializing...');
-        
         // FIXED: Use correct selectors that match your HTML structure
         this.container = document.querySelector('.tutor-lesson-layout');
         this.toggleBtn = document.querySelector('.tutor-sidebar-toggle-main');
@@ -48,11 +46,6 @@ class TutorLessonLayout {
             return;
         }
 
-        console.log('✅ All required elements found');
-        console.log('Container:', this.container);
-        console.log('Toggle button:', this.toggleBtn);
-        console.log('Sidebar:', this.sidebar);
-
         // Initialize functionality
         this.loadSidebarState();
         this.bindEvents();
@@ -60,9 +53,9 @@ class TutorLessonLayout {
         this.initializeTabSwitching();
         this.initializeDynamicTooltips();
         this.initializeSidebarCompletion();
+        this.initializeAccordionToggles();
+        
         this.isInitialized = true;
-
-        console.log('✅ TutorLessonLayout initialized successfully');
     }
 
     /**
@@ -70,15 +63,12 @@ class TutorLessonLayout {
      */
     toggleSidebar() {
         if (!this.container) {
-            console.log('No container found for sidebar toggle');
             return;
         }
 
         const wasHidden = this.container.classList.contains('sidebar-is-hidden');
         this.container.classList.toggle('sidebar-is-hidden');
         this.saveSidebarState();
-        
-        console.log(`🔄 Sidebar toggled: ${wasHidden ? 'shown' : 'hidden'}`);
         
         // Trigger custom event for other scripts
         const event = new CustomEvent('tutorSidebarToggled', {
@@ -98,7 +88,6 @@ class TutorLessonLayout {
         const isHidden = this.container.classList.contains('sidebar-is-hidden');
         try {
             localStorage.setItem('tutor-sidebar-state', isHidden ? 'hidden' : 'visible');
-            console.log(`💾 Sidebar state saved: ${isHidden ? 'hidden' : 'visible'}`);
         } catch (e) {
             console.warn('TutorLMS: Could not save sidebar state to localStorage');
         }
@@ -114,9 +103,6 @@ class TutorLessonLayout {
             const state = localStorage.getItem('tutor-sidebar-state');
             if (state === 'hidden') {
                 this.container.classList.add('sidebar-is-hidden');
-                console.log('📂 Loaded sidebar state: hidden');
-            } else {
-                console.log('📂 Loaded sidebar state: visible');
             }
         } catch (e) {
             console.warn('TutorLMS: Could not load sidebar state from localStorage');
@@ -137,21 +123,17 @@ class TutorLessonLayout {
             this.handleToggleClick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('🖱️ Toggle button clicked');
                 this.toggleSidebar();
             };
             
             this.handleToggleTouch = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('👆 Toggle button touched');
                 this.toggleSidebar();
             };
             
             this.toggleBtn.addEventListener('click', this.handleToggleClick);
             this.toggleBtn.addEventListener('touchend', this.handleToggleTouch);
-            
-            console.log('✅ Toggle button events bound');
         }
 
         // Close sidebar when clicking overlay on mobile
@@ -161,7 +143,6 @@ class TutorLessonLayout {
                     !this.container.classList.contains('sidebar-is-hidden') &&
                     !this.sidebar.contains(e.target) &&
                     !this.toggleBtn.contains(e.target)) {
-                    console.log('📱 Mobile overlay clicked - closing sidebar');
                     this.toggleSidebar();
                 }
             });
@@ -176,7 +157,6 @@ class TutorLessonLayout {
                 window.innerWidth <= 768 && 
                 this.container &&
                 !this.container.classList.contains('sidebar-is-hidden')) {
-                console.log('⌨️ Escape key pressed - closing sidebar');
                 this.toggleSidebar();
             }
         });
@@ -196,17 +176,15 @@ class TutorLessonLayout {
             const userPreference = localStorage.getItem('tutor-sidebar-state');
             if (userPreference !== 'hidden') {
                 this.container.classList.remove('sidebar-is-hidden');
-                console.log('🖥️ Desktop view - restoring sidebar visibility');
             }
         }
     }
 
     /**
-     * Initialize dynamic tooltips for completion checkboxes
+     * Initialize dynamic tooltips for completion checkboxes and info icons
+     * Also disables default Tutor LMS tooltips while preserving summary text
      */
     initializeDynamicTooltips() {
-        console.log('💡 Initializing dynamic tooltips...');
-        
         // Function to update tooltip text based on completion state
         const updateTooltip = (input) => {
             const isCompleted = input.checked;
@@ -230,6 +208,29 @@ class TutorLessonLayout {
             }
         };
         
+        // Function to disable default tooltips and preserve summary text
+        const disableDefaultTooltips = () => {
+            // Select all topic headers
+            const topicHeaders = document.querySelectorAll('.tutor-accordion-item-header');
+            
+            topicHeaders.forEach(header => {
+                // Get the summary text from the title attribute
+                const summaryText = header.getAttribute('title');
+                
+                if (summaryText) {
+                    // Set the text into a new data-attribute for custom scripts
+                    header.dataset.customTooltip = summaryText;
+                    
+                    // Keep the title attribute for our CSS tooltips to work
+                    // The CSS will handle disabling the default dark tooltips
+                    header.setAttribute('title', summaryText);
+                    
+                    // Add a class to mark as processed
+                    header.classList.add('tooltip-disabled');
+                }
+            });
+        };
+        
         // Update tooltips for all completion inputs
         const updateAllTooltips = () => {
             const inputs = document.querySelectorAll('.tutor-form-check-input.tutor-form-check-circle');
@@ -238,10 +239,11 @@ class TutorLessonLayout {
             });
         };
         
-        // Initial update
+        // Initial updates
         updateAllTooltips();
+        disableDefaultTooltips();
         
-        // Set up observer to watch for changes
+        // Set up observer to watch for changes in completion inputs
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'checked') {
@@ -256,7 +258,113 @@ class TutorLessonLayout {
             observer.observe(input, { attributes: true, attributeFilter: ['checked'] });
         });
         
-        console.log('✅ Dynamic tooltips initialized');
+        // Remove any old tooltips that get added by parent plugin
+        const removeOldTooltips = () => {
+            const oldTooltips = document.querySelectorAll('.tooltip-wrap, .tooltip-txt, .tutor-course-topic-title-info-icon');
+            oldTooltips.forEach(tooltip => {
+                tooltip.remove();
+            });
+            
+            // Also remove any modern tooltip libraries
+            const modernTooltips = document.querySelectorAll('[data-tippy-root], .tippy-box, .tippy-content, .tutor-tooltip, .tutor-tooltip-box');
+            modernTooltips.forEach(tooltip => {
+                tooltip.remove();
+            });
+        };
+        
+        // Run immediately and also set up a mutation observer to catch any that get added later
+        removeOldTooltips();
+        
+        // Watch for any new tooltips being added
+        const tooltipObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            if (node.classList && (
+                                node.classList.contains('tooltip-wrap') ||
+                                node.classList.contains('tooltip-txt') ||
+                                node.classList.contains('tutor-course-topic-title-info-icon') ||
+                                node.classList.contains('tippy-box') ||
+                                node.classList.contains('tippy-content') ||
+                                node.classList.contains('tutor-tooltip') ||
+                                node.classList.contains('tutor-tooltip-box')
+                            )) {
+                                node.remove();
+                            }
+                            // Also check child elements
+                            const oldTooltips = node.querySelectorAll('.tooltip-wrap, .tooltip-txt, .tutor-course-topic-title-info-icon, [data-tippy-root], .tippy-box, .tippy-content, .tutor-tooltip, .tutor-tooltip-box');
+                            oldTooltips.forEach(tooltip => tooltip.remove());
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Start observing
+        tooltipObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        // Watch for new topic headers being added and disable their tooltips
+        const headerObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            // Check if the added node is a topic header
+                            if (node.classList && node.classList.contains('tutor-accordion-item-header')) {
+                                const summaryText = node.getAttribute('title');
+                                if (summaryText) {
+                                    node.dataset.customTooltip = summaryText;
+                                    // Keep title attribute for CSS tooltips
+                                    node.setAttribute('title', summaryText);
+                                    node.classList.add('tooltip-disabled');
+                                }
+                            }
+                            // Check for topic headers within the added node
+                            const newHeaders = node.querySelectorAll ? node.querySelectorAll('.tutor-accordion-item-header') : [];
+                            newHeaders.forEach(header => {
+                                if (!header.classList.contains('tooltip-disabled')) {
+                                    const summaryText = header.getAttribute('title');
+                                    if (summaryText) {
+                                        header.dataset.customTooltip = summaryText;
+                                        // Keep title attribute for CSS tooltips
+                                        header.setAttribute('title', summaryText);
+                                        header.classList.add('tooltip-disabled');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Start observing for new headers
+        headerObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Debug: Log tooltip setup (remove in production)
+        setTimeout(() => {
+            const headers = document.querySelectorAll('.tutor-accordion-item-header');
+            console.log(`TutorLMS: Processed ${headers.length} topic headers for tooltips`);
+            headers.forEach((header, index) => {
+                const hasCustomTooltip = header.dataset.customTooltip;
+                const hasTitle = header.getAttribute('title');
+                const isDisabled = header.classList.contains('tooltip-disabled');
+                console.log(`Header ${index + 1}:`, {
+                    text: header.textContent.trim().substring(0, 30) + '...',
+                    hasCustomTooltip: !!hasCustomTooltip,
+                    hasTitle: !!hasTitle,
+                    isDisabled: isDisabled
+                });
+            });
+        }, 1000);
+
     }
 
     /**
@@ -307,8 +415,6 @@ class TutorLessonLayout {
      * Initialize sidebar completion - WORKING VERSION
      */
     initializeSidebarCompletion() {
-        console.log('🎯 Initializing sidebar completion...');
-        
         // Stop any existing interval
         if (this.aggressiveInterval) {
             clearInterval(this.aggressiveInterval);
@@ -358,7 +464,6 @@ class TutorLessonLayout {
                 
                 // Add click handler
                 newInput.onclick = (e) => {
-                    console.log('🎯 Click detected for lesson:', lessonId);
                     e.preventDefault();
                     e.stopPropagation();
                     e.stopImmediatePropagation();
@@ -368,7 +473,6 @@ class TutorLessonLayout {
                 
                 // Add event listener as backup
                 newInput.addEventListener('click', (e) => {
-                    console.log('🎯 Event listener fired for lesson:', lessonId);
                     e.preventDefault();
                     e.stopPropagation();
                     this.submitCompletionForm(lessonId);
@@ -377,8 +481,6 @@ class TutorLessonLayout {
                 // Replace original input
                 input.parentNode.replaceChild(newInput, input);
                 enabledCount++;
-                
-                console.log(`✅ Enabled input for lesson ${lessonId}`);
             });
             
             return enabledCount;
@@ -386,25 +488,81 @@ class TutorLessonLayout {
         
         // Initial setup
         const initialCount = enableCompletionInputs();
-        console.log(`🎯 Initial setup: ${initialCount} inputs enabled`);
         
-        // Set up aggressive re-enabling every 100ms
-        this.aggressiveInterval = setInterval(() => {
-            enableCompletionInputs();
-        }, 100);
-        
-        console.log('🎯 Aggressive re-enabling activated');
+        // TEMPORARILY DISABLED: Set up aggressive re-enabling every 100ms
+        // this.aggressiveInterval = setInterval(() => {
+        //     enableCompletionInputs();
+        // }, 100);
         
         // Restore scroll position
         setTimeout(() => this.restoreScrollPosition(), 500);
     }
 
     /**
+     * Initialize accordion toggles
+     */
+    initializeAccordionToggles() {
+        const toggles = document.querySelectorAll('[tutor-course-single-topic-toggler]');
+        
+        toggles.forEach((toggle, index) => {
+            // Remove any existing listeners to prevent duplicates
+            if (toggle._accordionHandler) {
+                toggle.removeEventListener('click', toggle._accordionHandler);
+                delete toggle._accordionHandler;
+            }
+            
+            // Create new handler
+            toggle._accordionHandler = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                const topicBody = toggle.nextElementSibling;
+                
+                // Use display state to determine if accordion is open/closed
+                const currentDisplay = window.getComputedStyle(topicBody).display;
+                const isCurrentlyOpen = currentDisplay !== 'none';
+                
+                if (topicBody && topicBody.classList.contains('tutor-accordion-item-body')) {
+                    // Find the caret element within this toggle
+                    const caret = toggle.querySelector('.tutor-accordion-caret');
+                    
+                    if (isCurrentlyOpen) {
+                        // Close the accordion
+                        toggle.classList.remove('is-active');
+                        if (caret) caret.classList.remove('is-active');
+                        topicBody.classList.add('tutor-display-none');
+                        // Force the display style directly
+                        topicBody.style.display = 'none';
+                    } else {
+                        // Open the accordion
+                        toggle.classList.add('is-active');
+                        if (caret) caret.classList.add('is-active');
+                        topicBody.classList.remove('tutor-display-none');
+                        // Force the display style directly
+                        topicBody.style.display = 'block';
+                    }
+                    
+                    // Force a reflow to ensure the display change takes effect
+                    topicBody.offsetHeight;
+                    
+                    // Force a CSS refresh by triggering a repaint
+                    toggle.style.transform = 'translateZ(0)';
+                    setTimeout(() => {
+                        toggle.style.transform = '';
+                    }, 10);
+                }
+            };
+            
+            // Add only ONE listener
+            toggle.addEventListener('click', toggle._accordionHandler);
+        });
+    }
+
+    /**
      * Submit completion form
      */
     submitCompletionForm(lessonId) {
-        console.log('📤 Submitting completion form for lesson:', lessonId);
-        
         // Save scroll position
         const sidebar = document.querySelector('.tutor-lesson-sidebar');
         if (sidebar) {
@@ -445,7 +603,6 @@ class TutorLessonLayout {
             const sidebar = document.querySelector('.tutor-lesson-sidebar');
             if (sidebar) {
                 sidebar.scrollTop = parseInt(savedScroll);
-                console.log('📜 Restored scroll position:', savedScroll);
                 localStorage.removeItem('tutorSidebarScroll');
             }
         }
@@ -487,67 +644,6 @@ const tutorLessonLayout = new TutorLessonLayout();
 // Make API available globally
 window.TutorLessonLayout = tutorLessonLayout.getAPI();
 window.tutorLessonLayout = tutorLessonLayout;
-
-// Debug functions
-window.testSidebarToggle = function() {
-    console.log('🧪 Testing sidebar toggle...');
-    const layout = document.querySelector('.tutor-lesson-layout');
-    const button = document.querySelector('.tutor-sidebar-toggle-main');
-    const sidebar = document.querySelector('.tutor-lesson-sidebar');
-    
-    console.log('Layout container:', layout);
-    console.log('Toggle button:', button);
-    console.log('Sidebar:', sidebar);
-    console.log('Current classes:', layout?.classList.toString());
-    
-    if (button) {
-        console.log('Simulating button click...');
-        button.click();
-    }
-};
-
-window.testSidebarSetup = function() {
-    console.log('🧪 Testing sidebar setup...');
-    
-    const inputs = document.querySelectorAll('.tutor-form-check-input.tutor-form-check-circle');
-    console.log(`Found ${inputs.length} inputs`);
-    
-    inputs.forEach((input, index) => {
-        const container = input.closest('.tutor-course-topic-item');
-        const link = container?.querySelector('a[data-lesson-id]');
-        const lessonId = link?.getAttribute('data-lesson-id');
-        
-        console.log(`Input ${index} (Lesson ${lessonId}):`, {
-            disabled: input.disabled,
-            readOnly: input.readOnly,
-            cursor: input.style.cursor,
-            hasEnabled: input.hasAttribute('data-tutor-enabled'),
-            clickable: !input.disabled && !input.readOnly
-        });
-    });
-};
-
-// Initialize topic toggles
-document.addEventListener('DOMContentLoaded', () => {
-    const toggles = document.querySelectorAll('[tutor-course-single-topic-toggler]');
-    
-    toggles.forEach(toggle => {
-        toggle.addEventListener('click', () => {
-            const topicBody = toggle.nextElementSibling;
-            const isActive = toggle.classList.contains('is-active');
-            
-            if (topicBody) {
-                if (isActive) {
-                    toggle.classList.remove('is-active');
-                    topicBody.classList.add('tutor-display-none');
-                } else {
-                    toggle.classList.add('is-active');
-                    topicBody.classList.remove('tutor-display-none');
-                }
-            }
-        });
-    });
-});
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {

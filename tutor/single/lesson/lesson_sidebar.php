@@ -56,21 +56,11 @@ if ($topics->have_posts()) {
         );
         ?>
         <div class="tutor-course-topic tutor-course-topic-<?php echo esc_attr($topic_id); ?>">
-            <div class="tutor-accordion-item-header<?php echo $is_topic_active ? ' is-active' : ''; ?>" tutor-course-single-topic-toggler>
+            <div class="tutor-accordion-item-header<?php echo $is_topic_active ? ' is-active' : ''; ?>" tutor-course-single-topic-toggler<?php if (trim($topic_summery)) : ?> title="<?php echo esc_attr($topic_summery); ?>"<?php endif; ?>>
                 <div class="tutor-row tutor-gx-1">
                     <div class="tutor-col">
                         <div class="tutor-course-topic-title">
                             <?php the_title(); ?>
-                            <?php if (trim($topic_summery)) : ?>
-                                <div class="tutor-course-topic-title-info tutor-ml-8">
-                                    <div class="tooltip-wrap">
-                                        <i class="tutor-course-topic-title-info-icon tutor-icon-circle-info-o"></i>
-                                        <span class="tooltip-txt tooltip-bottom">
-                                            <?php echo esc_textarea($topic_summery); ?>
-                                        </span>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -82,6 +72,8 @@ if ($topics->have_posts()) {
                         <?php endif; ?>
                     </div>
                 </div>
+                <!-- Accordion Caret Icon -->
+                <span class="tutor-accordion-caret tutor-icon-next<?php echo $is_topic_active ? ' is-active' : ''; ?>" aria-hidden="true"></span>
             </div>
 
             <div class="tutor-accordion-item-body <?php echo $is_topic_active ? '' : 'tutor-display-none'; ?>">
